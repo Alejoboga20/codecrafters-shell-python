@@ -15,7 +15,6 @@ def print_output(output: str):
 
 
 def handle_command(user_input: str):
-    last_user_inputs.append(user_input)
     handle_exit_command(user_input)
 
     command = user_input.split(" ")[0]
