@@ -1,3 +1,4 @@
+import os
 import sys
 
 commands: dict[str, str] = {
@@ -7,6 +8,18 @@ commands: dict[str, str] = {
 }
 
 commands_list = commands.keys()
+
+
+def handle_path_variable() -> list[str]:
+    paths: list[str] = []
+    path_variable = os.environ.get("PATH")
+
+    if path_variable is None:
+        return paths
+
+    paths = path_variable.split(":")
+
+    return paths
 
 
 def get_user_input():
@@ -54,6 +67,7 @@ def handle_echo_command(user_input: str):
 
 
 def handle_type_command(user_input: str):
+    paths = handle_path_variable()
     command = user_input.split(" ")[1]
 
     if command not in commands_list:
