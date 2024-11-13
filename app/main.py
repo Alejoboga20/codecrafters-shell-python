@@ -15,10 +15,25 @@ def print_output(output: str):
 
 
 def find_command(command: str):
+    is_exit_command(command)
+
     if command in command_list:
         return command
     else:
         return f"{command}: command not found"
+
+
+def is_exit_command(command: str):
+    splitted_command = command.split(" ")
+
+    if len(splitted_command) == 2:
+        exit_command = splitted_command[0]
+        code = splitted_command[1]
+
+        if exit_command == "exit":
+            sys.exit(int(code))
+
+    return
 
 
 def run_shell():
