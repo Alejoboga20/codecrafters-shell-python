@@ -21,7 +21,7 @@ def find_command(command: str):
         return f"{command}: command not found"
 
 
-def main():
+def run_shell():
     sys.stdout.write("$ ")
     sys.stdout.flush()
 
@@ -29,6 +29,11 @@ def main():
     result = find_command(user_input)
 
     print_output(result)
+
+
+def main():
+    while True:
+        run_shell()
 
 
 if __name__ == "__main__":
