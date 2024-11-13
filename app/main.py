@@ -1,6 +1,12 @@
 import sys
 
-command_list: list[str] = ["echo"]
+commands: dict[str, str] = {
+    "echo": "echo is a shell builtin",
+    "type": "type is a shell builtin",
+    "exit": "exit is a shell builtin",
+}
+
+commands_list = commands.keys()
 
 
 def get_user_input():
@@ -19,11 +25,11 @@ def handle_command(user_input: str):
 
     command = user_input.split(" ")[0]
 
-    if command in command_list:
+    if command in commands_list:
         if command == "echo":
-            output_list = user_input.split(" ")[1:]
-            output = " ".join(output_list)
-            return print_output(output)
+            handle_echo_command(user_input)
+        if command == "type":
+            return handle_type_command(user_input)
     else:
         return print_output(f"{user_input}: command not found")
 
@@ -39,6 +45,21 @@ def handle_exit_command(command: str):
             sys.exit(int(code))
 
     return
+
+
+def handle_echo_command(user_input: str):
+    output_list = user_input.split(" ")[1:]
+    output = " ".join(output_list)
+    return print_output(output)
+
+
+def handle_type_command(user_input: str):
+    command = user_input.split(" ")[1]
+
+    if command not in commands_list:
+        return print_output(f"{command}: not found")
+
+    return print_output(commands[command])
 
 
 def run_shell():
