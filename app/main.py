@@ -1,12 +1,12 @@
 import sys
 
-command_list: list[str] = ["pwd", "cd"]
+command_list: list[str] = ["echo"]
 
 
 def get_user_input():
     user_input: str = input()
 
-    return user_input
+    return user_input.strip()
 
 
 def print_output(output: str):
@@ -14,16 +14,22 @@ def print_output(output: str):
     sys.stdout.write("\n")
 
 
-def find_command(command: str):
-    is_exit_command(command)
+def handle_command(user_input: str):
+    last_user_inputs.append(user_input)
+    handle_exit_command(user_input)
+
+    command = user_input.split(" ")[0]
 
     if command in command_list:
-        return command
+        if command == "echo":
+            output_list = user_input.split(" ")[1:]
+            output = " ".join(output_list)
+            return print_output(output)
     else:
-        return f"{command}: command not found"
+        return print_output(f"{user_input}: command not found")
 
 
-def is_exit_command(command: str):
+def handle_exit_command(command: str):
     splitted_command = command.split(" ")
 
     if len(splitted_command) == 2:
@@ -41,9 +47,7 @@ def run_shell():
     sys.stdout.flush()
 
     user_input = get_user_input()
-    result = find_command(user_input)
-
-    print_output(result)
+    handle_command(user_input)
 
 
 def main():
