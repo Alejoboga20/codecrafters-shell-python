@@ -3,6 +3,7 @@ import subprocess
 import sys
 
 builtin_commands: dict[str, str] = {
+    "pwd": "pwd is a shell builtin",
     "echo": "echo is a shell builtin",
     "type": "type is a shell builtin",
     "exit": "exit is a shell builtin",
@@ -53,6 +54,8 @@ def handle_command(user_input: str, complete_commands_list: dict[str, str] = {})
             return handle_echo_command(user_input)
         if command == "type":
             return handle_type_command(user_input)
+        if command == "pwd":
+            return handle_pwd_command()
 
         command_full_path = f"{complete_commands_list[command]}/{command}"
         result = subprocess.run(
@@ -97,6 +100,11 @@ def handle_type_command(user_input: str):
     formatted_output = f"{command} is {paths_content[command]}/{command}"
 
     return print_output(formatted_output)
+
+
+def handle_pwd_command():
+    current_working_directory = os.getcwd()
+    return print_output(current_working_directory)
 
 
 def run_shell():
