@@ -10,16 +10,25 @@ commands: dict[str, str] = {
 commands_list = commands.keys()
 
 
-def handle_path_variable() -> list[str]:
-    paths: list[str] = []
+def handle_path_variable() -> dict[str, str]:
     path_variable = os.environ.get("PATH")
 
     if path_variable is None:
-        return paths
+        return {}
 
+    paths: list[str] = []
+    paths_content: dict[str, str] = {}
     paths = path_variable.split(":")
 
-    return paths
+    for path in paths:
+        if os.path.isdir(path) and os.path.exists(path):
+            content = os.listdir(path)
+
+            for command in content:
+                if command not in paths_content.keys():
+                    paths_content[command] = path
+
+    return paths_content
 
 
 def get_user_input():
@@ -70,10 +79,17 @@ def handle_type_command(user_input: str):
     paths = handle_path_variable()
     command = user_input.split(" ")[1]
 
-    if command not in commands_list:
+    """ Support for built-in commands """
+    if command in commands_list:
+        return print_output(commands[command])
+
+    """ Support for commands in PATH """
+    if command not in paths.keys():
         return print_output(f"{command}: not found")
 
-    return print_output(commands[command])
+    formatted_output = f"{command} is {paths[command]}/{command}"
+
+    return print_output(formatted_output)
 
 
 def run_shell():
