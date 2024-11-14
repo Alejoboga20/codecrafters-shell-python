@@ -1,13 +1,12 @@
 import os
+import subprocess
 import sys
 
-commands: dict[str, str] = {
+builtin_commands: dict[str, str] = {
     "echo": "echo is a shell builtin",
     "type": "type is a shell builtin",
     "exit": "exit is a shell builtin",
 }
-
-commands_list = commands.keys()
 
 
 def handle_path_variable() -> dict[str, str]:
@@ -40,18 +39,26 @@ def get_user_input():
 def print_output(output: str):
     sys.stdout.write(output)
     sys.stdout.write("\n")
+    sys.stdout.flush()
 
 
-def handle_command(user_input: str):
+def handle_command(user_input: str, complete_commands_list: dict[str, str] = {}):
     handle_exit_command(user_input)
+    parts = user_input.split(" ")
+    command = parts[0]
+    arguments = parts[1:]
 
-    command = user_input.split(" ")[0]
-
-    if command in commands_list:
+    if command in complete_commands_list.keys():
         if command == "echo":
-            handle_echo_command(user_input)
+            return handle_echo_command(user_input)
         if command == "type":
             return handle_type_command(user_input)
+
+        command_full_path = f"{complete_commands_list[command]}/{command}"
+        result = subprocess.run(
+            [command_full_path] + arguments, capture_output=True, text=True)
+        print_output(result.stdout.strip())
+
     else:
         return print_output(f"{user_input}: command not found")
 
@@ -76,18 +83,18 @@ def handle_echo_command(user_input: str):
 
 
 def handle_type_command(user_input: str):
-    paths = handle_path_variable()
+    paths_content = handle_path_variable()
     command = user_input.split(" ")[1]
 
     """ Support for built-in commands """
-    if command in commands_list:
-        return print_output(commands[command])
+    if command in builtin_commands.keys():
+        return print_output(builtin_commands[command])
 
     """ Support for commands in PATH """
-    if command not in paths.keys():
+    if command not in paths_content.keys():
         return print_output(f"{command}: not found")
 
-    formatted_output = f"{command} is {paths[command]}/{command}"
+    formatted_output = f"{command} is {paths_content[command]}/{command}"
 
     return print_output(formatted_output)
 
@@ -96,8 +103,10 @@ def run_shell():
     sys.stdout.write("$ ")
     sys.stdout.flush()
 
+    path_content = handle_path_variable()
+    complete_commands_list = path_content | builtin_commands
     user_input = get_user_input()
-    handle_command(user_input)
+    handle_command(user_input, complete_commands_list)
 
 
 def main():
