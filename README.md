@@ -1,34 +1,26 @@
-[![progress-banner](https://backend.codecrafters.io/progress/shell/eab71acd-c395-43c3-b1fd-00a9abfc9857)](https://app.codecrafters.io/users/codecrafters-bot?r=2qF)
+# Python Command Line Interface (CLI) from Scratch
 
-This is a starting point for Python solutions to the
-["Build Your Own Shell" Challenge](https://app.codecrafters.io/courses/shell/overview).
+This project is a basic Command Line Interface (CLI) built from scratch in Python. It supports executing system commands, handling custom commands like `echo`, and simulating terminal-like behaviors with dynamic command handling.
 
-In this challenge, you'll build your own POSIX compliant shell that's capable of
-interpreting shell commands, running external programs and builtin commands like
-cd, pwd, echo and more. Along the way, you'll learn about shell command parsing,
-REPLs, builtin commands, and more.
+## Features
 
-**Note**: If you're viewing this repo on GitHub, head over to
-[codecrafters.io](https://codecrafters.io) to try the challenge.
+- **Custom Command Handling**: Supports built-in commands like `echo`, `type`, and more.
+- **System Command Execution**: Runs executable files located in specified directories.
+- **Argument Parsing**: Accepts arguments for commands, allowing commands like `my_exe <argument>`.
+- **Interactive Prompt**: Displays a `$ ` prompt after each command, simulating a terminal.
 
-# Passing the first stage
+## Getting Started
 
-The entry point for your `shell` implementation is in `app/main.py`. Study and
-uncomment the relevant code, and push your changes to pass the first stage:
+### Prerequisites
 
-```sh
-git commit -am "pass 1st stage" # any msg
-git push origin master
+- **Python 3.8+** is required to run this project.
+
+### Running the CLI
+
+```
+python3 app/main.py
 ```
 
-Time to move on to the next stage!
+### Usage
 
-# Stage 2 & beyond
-
-Note: This section is for stages 2 and beyond.
-
-1. Ensure you have `python (3.11)` installed locally
-1. Run `./your_program.sh` to run your program, which is implemented in
-   `app/main.py`.
-1. Commit your changes and run `git push origin master` to submit your solution
-   to CodeCrafters. Test output will be streamed to your terminal.
+Once running, you’ll see a $ prompt where you can enter commands. The CLI will interpret and execute recognized commands or print an error message if the command is not found.
