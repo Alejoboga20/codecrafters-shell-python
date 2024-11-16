@@ -3,10 +3,11 @@ import subprocess
 import sys
 
 from app.constants.builtin_commands import builtin_commands
+from app.constants.special_characters import SpecialCharacters, EnvVariables
 
 
 def handle_path_variable() -> dict[str, str]:
-    path_variable = os.environ.get("PATH")
+    path_variable = os.environ.get(EnvVariables.PATH.value)
 
     if path_variable is None:
         return {}
@@ -24,6 +25,15 @@ def handle_path_variable() -> dict[str, str]:
                     paths_content[command] = path
 
     return paths_content
+
+
+def handle_home_variable() -> str:
+    home_variable = os.environ.get(EnvVariables.HOME.value)
+
+    if home_variable is None:
+        return ""
+
+    return home_variable
 
 
 def get_user_input():
@@ -100,12 +110,21 @@ def handle_type_command(user_input: str):
 
 
 def handle_cd_command(arguments: list[str]):
+    home_directory = handle_home_variable()
+
     new_directory = arguments[0]
+    first_character = new_directory[0]
+    rest_of_characters = new_directory[1:]
+
+    if first_character == SpecialCharacters.HOME.value:
+        destionation_path = f"{home_directory}/{rest_of_characters}"
+    else:
+        destionation_path = new_directory
 
     try:
-        os.chdir(new_directory)
+        os.chdir(destionation_path)
     except FileNotFoundError:
-        return print_output(f"cd: {new_directory}: No such file or directory")
+        return print_output(f"cd: {destionation_path}: No such file or directory")
 
 
 def handle_pwd_command():
