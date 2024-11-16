@@ -2,12 +2,7 @@ import os
 import subprocess
 import sys
 
-builtin_commands: dict[str, str] = {
-    "pwd": "pwd is a shell builtin",
-    "echo": "echo is a shell builtin",
-    "type": "type is a shell builtin",
-    "exit": "exit is a shell builtin",
-}
+from app.constants.builtin_commands import builtin_commands
 
 
 def handle_path_variable() -> dict[str, str]:
@@ -56,6 +51,8 @@ def handle_command(user_input: str, complete_commands_list: dict[str, str] = {})
             return handle_type_command(user_input)
         if command == "pwd":
             return handle_pwd_command()
+        if command == "cd":
+            return handle_cd_command(arguments)
 
         command_full_path = f"{complete_commands_list[command]}/{command}"
         result = subprocess.run(
@@ -100,6 +97,15 @@ def handle_type_command(user_input: str):
     formatted_output = f"{command} is {paths_content[command]}/{command}"
 
     return print_output(formatted_output)
+
+
+def handle_cd_command(arguments: list[str]):
+    new_directory = arguments[0]
+
+    try:
+        os.chdir(new_directory)
+    except FileNotFoundError:
+        return print_output(f"cd: {new_directory}: No such file or directory")
 
 
 def handle_pwd_command():
